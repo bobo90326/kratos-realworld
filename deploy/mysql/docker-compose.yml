@@ -5,3 +5,6 @@ services:
     hostname: user-db
     environment:
       MYSQL_ROOT_PASSWORD: dangerous
+    ports:
+      - 3306:3306
+      
