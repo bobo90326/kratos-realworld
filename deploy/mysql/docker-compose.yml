@@ -1,0 +1,7 @@
+version: '3'
+services:
+  rwdb:
+    image: mysql:8
+    hostname: user-db
+    environment:
+      MYSQL_ROOT_PASSWORD: dangerous
