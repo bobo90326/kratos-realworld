@@ -370,7 +370,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realworld.v1.LoginReply'
+                                $ref: '#/components/schemas/realworld.v1.UserReply'
 components:
     schemas:
         realworld.v1.AddCommentsRequest:
@@ -413,9 +413,6 @@ components:
             properties:
                 username:
                     type: string
-        realworld.v1.LoginReply:
-            type: object
-            properties: {}
         realworld.v1.LoginRequest:
             type: object
             properties:
