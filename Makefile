@@ -58,7 +58,7 @@ wire:
 .PHONY: run
 #run
 run:
-   	kratos run 
+	kratos run
 
 .PHONY: generate
 # generate
