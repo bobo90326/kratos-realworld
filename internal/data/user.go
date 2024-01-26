@@ -24,6 +24,10 @@ func (g *userRepo) CreateUser(ctx context.Context, u *biz.User) error {
 	return nil
 }
 
+func (g *userRepo) GetUserByEmail(ctx context.Context, email string) (*biz.User, error) {
+	return nil, nil
+}
+
 type profileRepo struct {
 	data *Data
 	log  *log.Helper
