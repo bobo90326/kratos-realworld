@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"errors"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"golang.org/x/crypto/bcrypt"
@@ -13,7 +14,17 @@ type User struct {
 	Token        string
 	Bio          string
 	Image        string
+	Password     string
 	PasswordHash string
+}
+
+type UserLogin struct {
+	Email    string
+	UserName string
+	Token    string
+	Bio      string
+	Image    string
+	Password string
 }
 
 func hashPassword(password string) string {
@@ -56,13 +67,36 @@ func NewUesrUsecase(ur UserRepo,
 }
 
 // CreateGreeter creates a Greeter, and returns the new Greeter.
-func (uc *UesrUsecase) Register(ctx context.Context, u *User) error {
-	if err := uc.ur.CreateUser(ctx, u); err != nil {
-		return err
+func (uc *UesrUsecase) Register(ctx context.Context, username, email, password string) (*UserLogin, error) {
+	u := &User{
+		Email:    email,
+		UserName: username,
+		Password: password,
 	}
-	return nil
+	if err := uc.ur.CreateUser(ctx, u); err != nil {
+		return nil, err
+	}
+	return &UserLogin{
+		Email:    u.Email,
+		UserName: u.UserName,
+		Bio:      u.Bio,
+		Image:    u.Image,
+		Token:    "token",
+	}, nil
 }
 
-func (uc *UesrUsecase) Login(ctx context.Context, email, password string) (rely *User, err error) {
-	return nil, nil
+func (uc *UesrUsecase) Login(ctx context.Context, email, password string) (rely *UserLogin, err error) {
+	u, err := uc.ur.GetUserByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+	if !verifyPassword(password, u.PasswordHash) {
+		return nil, errors.New("login error")
+	}
+	return &UserLogin{
+		Email:    email,
+		UserName: u.UserName,
+		Token:    "token",
+	}, nil
+
 }
