@@ -3,6 +3,7 @@ package server
 import (
 	v1 "kratos-realworld/api/realworld/v1"
 	"kratos-realworld/internal/conf"
+	"kratos-realworld/internal/pkg/middleware/auth"
 	"kratos-realworld/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -15,6 +16,7 @@ func NewHTTPServer(c *conf.Server, greeter *service.RealWorldService, logger log
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			auth.JWTAuth(),
 		),
 	}
 	if c.Http.Network != "" {
