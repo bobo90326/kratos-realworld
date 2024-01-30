@@ -15,7 +15,7 @@ service RealWorld {
     };
   }
 
-  rpc Register (RegisterRequest) returns (RegisterReply){
+  rpc Register (RegisterRequest) returns (UserReply){
     option (google.api.http) = {
       post: "/api/users",
       body: "*",

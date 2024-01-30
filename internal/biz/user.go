@@ -3,6 +3,8 @@ package biz
 import (
 	"context"
 	"errors"
+	"kratos-realworld/internal/conf"
+	"kratos-realworld/internal/pkg/middleware/auth"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"golang.org/x/crypto/bcrypt"
@@ -51,19 +53,25 @@ type ProfileRepo interface {
 }
 
 type UesrUsecase struct {
-	ur  UserRepo
-	pr  ProfileRepo
-	log *log.Helper
+	ur   UserRepo
+	pr   ProfileRepo
+	jwtc *conf.JWT
+	log  *log.Helper
 }
 
 // NewGreeterUsecase new a Greeter usecase.
 func NewUesrUsecase(ur UserRepo,
-	pr ProfileRepo, logger log.Logger) *UesrUsecase {
+	pr ProfileRepo, jwtc *conf.JWT, logger log.Logger) *UesrUsecase {
 	return &UesrUsecase{
-		ur:  ur,
-		pr:  pr,
-		log: log.NewHelper(logger),
+		ur:   ur,
+		pr:   pr,
+		jwtc: jwtc,
+		log:  log.NewHelper(logger),
 	}
+}
+
+func (uc *UesrUsecase) generateToken(username string) string {
+	return auth.GenerateToke(uc.jwtc.Token, username)
 }
 
 // CreateGreeter creates a Greeter, and returns the new Greeter.
@@ -81,7 +89,7 @@ func (uc *UesrUsecase) Register(ctx context.Context, username, email, password s
 		UserName: u.UserName,
 		Bio:      u.Bio,
 		Image:    u.Image,
-		Token:    "token",
+		Token:    uc.generateToken(username),
 	}, nil
 }
 
@@ -96,7 +104,7 @@ func (uc *UesrUsecase) Login(ctx context.Context, email, password string) (rely 
 	return &UserLogin{
 		Email:    email,
 		UserName: u.UserName,
-		Token:    "token",
+		Token:    uc.generateToken(u.UserName),
 	}, nil
 
 }

@@ -13,20 +13,20 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func GenerateToke() string {
+func GenerateToke(secret, username string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userid": "2233",
+		"userid": username,
 		"nbf":    time.Date(2020, 1, 1, 12, 0, 0, 0, time.UTC).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte("secret"))
+	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
 		fmt.Println(err)
 	}
 	return tokenString
 }
 
-func JWTAuth() middleware.Middleware {
+func JWTAuth(secret string) middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			if tr, ok := transport.FromServerContext(ctx); ok {
@@ -42,7 +42,7 @@ func JWTAuth() middleware.Middleware {
 					if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 						return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 					}
-					return []byte("secret"), nil
+					return []byte(secret), nil
 				})
 
 				if err != nil {

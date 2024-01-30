@@ -352,7 +352,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/realworld.v1.RegisterReply'
+                                $ref: '#/components/schemas/realworld.v1.UserReply'
     /api/users/login:
         post:
             tags:
@@ -520,9 +520,6 @@ components:
                     type: string
                 following:
                     type: boolean
-        realworld.v1.RegisterReply:
-            type: object
-            properties: {}
         realworld.v1.RegisterRequest:
             type: object
             properties:

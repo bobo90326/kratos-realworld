@@ -5,8 +5,9 @@ server:
   grpc:
     addr: 0.0.0.0:9000
     timeout: 1s
-  jwt:
-    secret: "hello"
+
 data:
   database:
     dsn: root:dangerous@tcp(127.0.0.1:3306)/realworld?charset=utf8mb4&parseTime=True&loc=Local
+jwt:
+  secret: "hello"
